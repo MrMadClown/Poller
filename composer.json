@@ -1,0 +1,22 @@
+{
+  "name": "mrmadclown/poller",
+  "description": "",
+  "type": "library",
+  "require": {
+    "php": ">=7.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "MrMadClown\\Poller\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MrMadClown\\Poller\\Tests\\": "tests/"
+    }
+  }
+}
