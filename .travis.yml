@@ -1,6 +1,7 @@
 language: php
 sudo: false
 php:
+  - 7.2
   - 7.3
   - 7.4
 
@@ -16,6 +17,7 @@ install:
 
 stages:
   - test
+  - 7.2 test with prefer-lowest
   - 7.3 test with prefer-lowest
   - 7.4 test with prefer-lowest
 
@@ -25,6 +27,12 @@ script:
 jobs:
   fast_finish: true
   include:
+    - stage: 7.2 test with prefer-lowest
+      install:
+        - travis_retry composer update --no-interaction --prefer-lowest
+      php: 7.2
+      script:
+        - composer test
     - stage: 7.3 test with prefer-lowest
       install:
         - travis_retry composer update --no-interaction --prefer-lowest
