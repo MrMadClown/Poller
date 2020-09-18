@@ -1,20 +1,11 @@
 <?php
-/**
- * Luca Perna - Webdeveloper
- * Team Dementia
- * luc@rissc.com
- *
- * Date: 19.03.20
- */
 
 namespace MrMadClown\Poller;
 
 final class FixedTriesPoller implements PollingInterface
 {
-  /** @var int */
-  private $delay;
-  /** @var int */
-  private $tries;
+  private int $delay;
+  private int $tries;
 
   public function __construct(int $delay, int $tries)
   {

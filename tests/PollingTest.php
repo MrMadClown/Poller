@@ -1,16 +1,10 @@
 <?php
-/**
- * Luca Perna - Webdeveloper
- * Team Dementia
- * luc@rissc.com
- *
- * Date: 19.03.20
- */
 
 namespace MrMadClown\Poller\Tests;
 
 use LogicException;
 use MrMadClown\Poller\FixedTriesPoller;
+use MrMadClown\Poller\InfinitePoller;
 use MrMadClown\Poller\PollingException;
 use MrMadClown\Poller\PollingInterface;
 use MrMadClown\Poller\TimedPoller;
@@ -18,40 +12,45 @@ use PHPUnit\Framework\TestCase;
 
 class PollingTest extends TestCase
 {
-  public function pollerProvider()
+  public function pollerProvider(): \Generator
   {
     yield [new FixedTriesPoller(1, 10)];
     yield [new TimedPoller(1, 10)];
   }
 
-  /** @dataProvider pollerProvider */
-  public function testRun(PollingInterface $poller)
+  public function completePollerProvider(): \Generator
   {
-    $poller = new FixedTriesPoller(1, 10);
-
-    $result = $poller->run(function () {
-      return true;
-    });
-
-    static::assertTrue($result);
+    $pollerProvider = $this->pollerProvider();
+    foreach ($pollerProvider as $poller) {
+      yield $poller;
+    }
+    yield [new InfinitePoller(1)];
   }
 
   /** @dataProvider pollerProvider */
-  public function testPollingException(PollingInterface $poller)
+  public function testPollingException(PollingInterface $poller): void
   {
-    static::expectException(PollingException::class);
+    $this->expectException(PollingException::class);
 
-    $poller->run(function () {
-      return null;
-    });
+    $poller->run(static fn(): ?bool => null);
   }
 
-  /** @dataProvider pollerProvider */
-  public function testPollingDoenstEatExceptions(PollingInterface $poller)
+  /** @dataProvider completePollerProvider */
+  public function testRun(PollingInterface $poller): void
   {
-    static::expectException(LogicException::class);
+    $arr = [null, 5750.73];
 
-    $poller->run(function () {
+    $result = $poller->run(static fn() => array_shift($arr));
+
+    static::assertEquals(5750.73, $result);
+  }
+
+  /** @dataProvider completePollerProvider */
+  public function testPollingDoesntEatExceptions(PollingInterface $poller): void
+  {
+    $this->expectException(LogicException::class);
+
+    $poller->run(static function (): void {
       throw new LogicException();
     });
   }

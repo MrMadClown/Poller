@@ -8,10 +8,9 @@ use function time;
 
 final class TimedPoller implements PollingInterface
 {
-  /** @var int */
-  private $delay;
-  /** @var int */
-  private $timeout;
+  private int $delay;
+
+  private int $timeout;
 
   public function __construct(int $delay, int $timeout)
   {
