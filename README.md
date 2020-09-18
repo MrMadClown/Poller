@@ -7,7 +7,7 @@
 ```bash
 composer require mrmadclown/poller
 ```
-##Usage
+## Usage
 ```php
 use MrMadClown\Poller\TimedPoller;
 
