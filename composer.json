@@ -22,6 +22,11 @@
   "scripts": {
     "tests": [
       "phpunit --configuration phpunit.xml"
+    ],
+    "local-tests": [
+      "docker-compose up -d ",
+      "docker-compose exec -T app vendor/bin/phpunit --configuration phpunit.xml --debug --verbose",
+      "docker-compose down"
     ]
   }
 }

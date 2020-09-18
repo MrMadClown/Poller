@@ -20,7 +20,7 @@ class PollingTest extends TestCase
 
   public function completePollerProvider(): \Generator
   {
-    $pollerProvider = $this->pollerProvider();
+    $pollerProvider = [...$this->pollerProvider()];
     foreach ($pollerProvider as $poller) {
       yield $poller;
     }
@@ -40,7 +40,9 @@ class PollingTest extends TestCase
   {
     $arr = [null, 5750.73];
 
-    $result = $poller->run(static fn() => array_shift($arr));
+    $result = $poller->run(static function () use (&$arr) {
+      return \array_shift($arr);
+    });
 
     static::assertEquals(5750.73, $result);
   }
