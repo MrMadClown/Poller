@@ -2,23 +2,23 @@
 
 namespace MrMadClown\Poller;
 
+use function is_null;
+use function sleep;
+
 final class FixedTriesPoller implements PollingInterface
 {
-  private int $delay;
-  private int $tries;
-
-  public function __construct(int $delay, int $tries)
+  public function __construct(private int $delay, private int $tries)
   {
-    $this->delay = $delay;
-    $this->tries = $tries;
   }
 
-  public function run(callable $task)
+  public function run(callable $task): mixed
   {
     $tries = 1;
     while (is_null($result = $task())) {
       sleep($this->delay);
-      if ($this->tries <= $tries) throw new PollTriesExceededException(sprintf('Poller has exceeded the amount of %s tries!', $this->tries));
+      if ($this->tries <= $tries) {
+        throw new PollTriesExceededException(sprintf('Poller has exceeded the amount of %s tries!', $this->tries));
+      }
       $tries++;
     }
 
